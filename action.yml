@@ -1,0 +1,10 @@
+name: 'Push to SFTP'
+description: 'Push files to your server via SFTP (no SSH needed!)'
+inputs:
+  server:
+    description: 'Server'
+    required: true
+    default: ''
+runs:
+  using: 'node12'
+  main: 'index.js'
