@@ -1,10 +1,31 @@
 name: 'Push to SFTP'
 description: 'Push files to your server via SFTP (no SSH needed!)'
 inputs:
-  server:
-    description: 'Server'
+  host:
+    description: 'SFTP server'
     required: true
     default: ''
+  port:
+    description: 'SFTP server port'
+    required: true
+    default: '22'
+  username:
+    description: 'SFTP username'
+    required: true
+    default: ''
+  password:
+    description: 'SFTP password'
+    required: true
+    default: ''
+  sourceDir:
+    description: 'Source directory to upload from (will upload all files in this directory)'
+    required: true
+    default: ''
+  targetDir:
+    description: 'Remote directory to upload to (WARNING: overwrites ALL files in this directory)'
+    required: true
+    default: ''
+  
 runs:
   using: 'node12'
   main: 'index.js'
