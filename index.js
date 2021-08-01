@@ -8,26 +8,27 @@ const password = core.getInput('password')
 const sourceDir = core.getInput('sourceDir')
 const targetDir = core.getInput('targetDir')
 
+core.info(`connecting to ${username}@${host}:${port}...`)
+
 let sftp = new Client()
-
-try {
-  core.info(`connecting to ${username}@${host}:${port}...`)
-
-  await sftp.connect({
+sftp
+  .connect({
     host,
     port,
     username,
     password,
   })
-
-  core.info('connected \n uploading...')
-
-  await sftp.uploadDir(sourceDir, targetDir)
-
-  core.info(`succesfully uploaded ${sourceDir} to ${targetDir} 🎉`)
-} catch (error) {
-  core.setFailed(error.message)
-} finally {
-  core.info('ending SFTP session')
-  sftp.end()
-}
+  .then(() => {
+    core.info(`connected \n uploading ${sourceDir} to ${targetDir}...`)
+    return sftp.uploadDir(sourceDir, targetDir)
+  })
+  .then(() => {
+    core.info(`succesfully uploaded ${sourceDir} to ${targetDir} 🎉`)
+  })
+  .catch((error) => {
+    core.setFailed(error.message)
+  })
+  .finally(() => {
+    core.info('ending SFTP session')
+    sftp.end()
+  })
