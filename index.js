@@ -8,8 +8,6 @@ const password = core.getInput('password')
 const sourceDir = core.getInput('sourceDir')
 const targetDir = core.getInput('targetDir')
 
-core.info(host, port, username, password, sourceDir, targetDir)
-
 core.info(`connecting to ${username}@${host}:${port}...`)
 
 let sftp = new Client()
