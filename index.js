@@ -17,6 +17,8 @@ sftp
     port,
     username,
     password,
+    readyTimeout: 5000,
+    retries: 5,
   })
   .then(() => {
     core.info(`connected \n uploading ${sourceDir} to ${targetDir}...`)
