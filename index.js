@@ -64,8 +64,6 @@ async function run() {
     re = createFilenamesRegExp(modifiedFiles)
 
     console.log(re.toString())
-
-    return
   }
 
   try {
@@ -81,7 +79,7 @@ async function run() {
 
     core.info(`connected \n uploading ${sourceDir} to ${targetDir}...`)
 
-    await sftp.uploadDir(sourceDir, targetDir)
+    await sftp.uploadDir(sourceDir, targetDir, re)
 
     core.info(`succesfully uploaded ${sourceDir} to ${targetDir} 🎉`)
   } catch (error) {
