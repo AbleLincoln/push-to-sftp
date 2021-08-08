@@ -16,7 +16,7 @@ async function run() {
   if (onlyModifiedFiles) {
     core.info('getting modified files...')
     const myToken = core.getInput('token')
-    const myTolkien = github.context.token
+    const myTolkien = github.context
     core.info(`tokens: ${myToken} ${myTolkien}`)
 
     return
