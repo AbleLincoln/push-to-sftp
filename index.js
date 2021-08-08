@@ -36,7 +36,9 @@ async function run() {
       basehead,
     })
 
-    core.info(files)
+    const modifiedFiles = files.map(({ filename }) => filename)
+
+    core.info(modifiedFiles)
 
     return
   }
