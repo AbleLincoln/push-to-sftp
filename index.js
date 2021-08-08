@@ -10,7 +10,7 @@ const sourceDir = core.getInput('sourceDir')
 const targetDir = core.getInput('targetDir')
 const onlyModifiedFiles = core.getInput('onlyModifiedFiles')
 
-let sftp = new Client()
+let client = new Client()
 
 /**
  * Escapes any special characters in our file list (primarily `/`, `.`) to prepare for RegExp
@@ -68,7 +68,7 @@ async function run() {
 
   try {
     core.info(`connecting to ${username}@${host}:${port}...`)
-    await sftp.connect({
+    await client.connect({
       host,
       port,
       username,
@@ -77,16 +77,20 @@ async function run() {
       retries: 5,
     })
 
+    client.on('upload', (info) => {
+      core.info(`Listener: Uploaded ${info.source} to ${info.destination}`)
+    })
+
     core.info(`connected \n uploading ${sourceDir} to ${targetDir}...`)
 
-    await sftp.uploadDir(onlyModifiedFiles ? './' : sourceDir, targetDir, re)
+    await client.uploadDir(onlyModifiedFiles ? './' : sourceDir, targetDir, re)
 
     core.info(`succesfully uploaded ${sourceDir} to ${targetDir} 🎉`)
   } catch (error) {
     throw error // caught in parent scope
   } finally {
     core.info('ending SFTP session')
-    sftp.end()
+    client.end()
   }
 }
 
