@@ -25,6 +25,14 @@ inputs:
     description: 'Remote directory to upload to (WARNING: overwrites ALL files in this directory)'
     required: true
     default: ''
+  onlyModifiedFiles:
+    description: 'Boolean value. If set to `true` will only upload modified files'
+    required: false
+    default: false
+  token:
+    description: 'Token with access to your repository scoped in as a secret. You will only need this if `onlyModifiedFiles` is set to `true`. See https://docs.github.com/en/actions/reference/authentication-in-a-workflow#about-the-github_token-secret for more info'
+    required: false
+    default: ''
   
 runs:
   using: 'node12'
