@@ -7,7 +7,6 @@ const host = core.getInput('host')
 const port = core.getInput('port')
 const username = core.getInput('username')
 const password = core.getInput('password')
-const sourceDir = core.getInput('sourceDir')
 const targetDir = core.getInput('targetDir')
 
 let client = new Client()
@@ -32,7 +31,7 @@ function createFilenamesRegExp(filenames) {
 }
 
 function handleModifiedFiles(files) {
-  core.info(`Modified files: ${files}`)
+  core.info(`Modified files: ${files.join(', ')}`)
 
   return Promise.all(
     files.map((filename) =>
@@ -42,7 +41,7 @@ function handleModifiedFiles(files) {
 }
 
 async function handleAddedFiles(files) {
-  core.info(`Added files: ${files}`)
+  core.info(`Added files: ${files.join(', ')}`)
 
   return Promise.all(
     files.map((filename) =>
@@ -76,10 +75,12 @@ async function run() {
   })
 
   const modifiedFiles = files
+    .filter(({ filename }) => filename.startsWith(targetDir))
     .filter(({ status }) => status === 'modified')
     .map(({ filename }) => filename)
 
   const addedFiles = files
+    .filter(({ filename }) => filename.startsWith(targetDir))
     .filter(({ status }) => status === 'added')
     .map(({ filename }) => filename)
 
