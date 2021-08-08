@@ -28,13 +28,15 @@ async function run() {
 
     core.info(`${owner} ${repo} ${basehead}`)
 
-    const resp = await octokit.rest.repos.compareCommitsWithBasehead({
+    const {
+      data: { files },
+    } = await octokit.rest.repos.compareCommitsWithBasehead({
       owner,
       repo,
       basehead,
     })
 
-    core.info(resp)
+    core.info(files)
 
     return
   }
