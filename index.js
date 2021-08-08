@@ -1,3 +1,4 @@
+const path = require('path')
 const core = require('@actions/core')
 const { getOctokit, context } = require('@actions/github')
 const Client = require('ssh2-sftp-client')
@@ -8,7 +9,6 @@ const username = core.getInput('username')
 const password = core.getInput('password')
 const sourceDir = core.getInput('sourceDir')
 const targetDir = core.getInput('targetDir')
-const onlyModifiedFiles = core.getInput('onlyModifiedFiles')
 
 let client = new Client()
 
@@ -31,40 +31,57 @@ function createFilenamesRegExp(filenames) {
   return new RegExp(`(${escapedStr})`, 'g')
 }
 
+function handleModifiedFiles(files) {
+  core.info(`Modified files: ${files}`)
+
+  return Promise.all(
+    files.map((filename) =>
+      client.fastPut(filename, path.join(targetDir, filename))
+    )
+  )
+}
+
+async function handleAddedFiles(files) {
+  core.info(`Added files: ${files}`)
+
+  return Promise.all(
+    files.map((filename) =>
+      client.fastPut(filename, path.join(targetDir, filename))
+    )
+  )
+}
+
+async function handleRemovedFiles() {}
+async function handleRenamedFiles() {}
+
 async function run() {
-  let re
+  const token = core.getInput('token')
+  const octokit = getOctokit(token)
+  const {
+    payload: { before, after },
+    repo: { owner, repo },
+  } = context
+  const base = before
+  const head = after
+  const basehead = `${base}...${head}`
 
-  if (onlyModifiedFiles) {
-    core.info('getting modified files...')
+  core.info(`${owner} ${repo} ${basehead}`)
 
-    const token = core.getInput('token')
-    const octokit = getOctokit(token)
-    const {
-      payload: { before, after },
-      repo: { owner, repo },
-    } = context
-    const base = before
-    const head = after
-    const basehead = `${base}...${head}`
+  const {
+    data: { files },
+  } = await octokit.rest.repos.compareCommitsWithBasehead({
+    owner,
+    repo,
+    basehead,
+  })
 
-    core.info(`${owner} ${repo} ${basehead}`)
+  const modifiedFiles = files
+    .filter(({ status }) => status === 'modified')
+    .map(({ filename }) => filename)
 
-    const {
-      data: { files },
-    } = await octokit.rest.repos.compareCommitsWithBasehead({
-      owner,
-      repo,
-      basehead,
-    })
-
-    const modifiedFiles = files.map(({ filename }) => filename)
-
-    core.info(modifiedFiles)
-
-    re = createFilenamesRegExp(modifiedFiles)
-
-    console.log(re.toString())
-  }
+  const addedFiles = files
+    .filter(({ status }) => status === 'added')
+    .map(({ filename }) => filename)
 
   try {
     core.info(`connecting to ${username}@${host}:${port}...`)
@@ -81,13 +98,8 @@ async function run() {
       core.info(`Listener: Uploaded ${info.source} to ${info.destination}`)
     })
 
-    core.info(`connected \n uploading ${sourceDir} to ${targetDir}`)
-
-    const rslt = await client.uploadDir('./', targetDir, /fasi\/test\.txt/g)
-
-    console.log(rslt)
-
-    core.info(`succesfully uploaded ${sourceDir} to ${targetDir} 🎉`)
+    await handleModifiedFiles(modifiedFiles)
+    await handleAddedFiles(addedFiles)
   } catch (error) {
     throw error // caught in parent scope
   } finally {
@@ -100,4 +112,4 @@ try {
   run()
 } catch (error) {
   core.setFailed(error.message)
-} 
+}
