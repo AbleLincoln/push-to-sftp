@@ -83,7 +83,13 @@ async function run() {
 
     core.info(`connected \n uploading ${sourceDir} to ${targetDir}...`)
 
-    await client.uploadDir(onlyModifiedFiles ? './' : sourceDir, targetDir, re)
+    const rslt = await client.uploadDir(
+      onlyModifiedFiles ? '' : sourceDir,
+      targetDir,
+      re
+    )
+
+    console.log(rslt)
 
     core.info(`succesfully uploaded ${sourceDir} to ${targetDir} 🎉`)
   } catch (error) {
