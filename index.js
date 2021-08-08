@@ -15,36 +15,41 @@ let sftp = new Client()
 async function run() {
   if (onlyModifiedFiles) {
     core.info('getting modified files...')
-    const myToken = core.getInput('token')
-    const myTolkien = github.token
-    core.info(`tokens: ${myToken} ${myTolkien}`)
+    const token = core.getInput('token')
+    const octokit = github.getOctokit(token)
+    const base = github.context.payload.before
+    const head = github.context.payload.after
 
+    core.info(`${base}...${head}`)
     return
   }
 
-  core.info(`connecting to ${username}@${host}:${port}...`)
+  try {
+    core.info(`connecting to ${username}@${host}:${port}...`)
+    await sftp.connect({
+      host,
+      port,
+      username,
+      password,
+      readyTimeout: 5000,
+      retries: 5,
+    })
 
-  await sftp.connect({
-    host,
-    port,
-    username,
-    password,
-    readyTimeout: 5000,
-    retries: 5,
-  })
+    core.info(`connected \n uploading ${sourceDir} to ${targetDir}...`)
 
-  core.info(`connected \n uploading ${sourceDir} to ${targetDir}...`)
+    await sftp.uploadDir(sourceDir, targetDir)
 
-  await sftp.uploadDir(sourceDir, targetDir)
-
-  core.info(`succesfully uploaded ${sourceDir} to ${targetDir} 🎉`)
+    core.info(`succesfully uploaded ${sourceDir} to ${targetDir} 🎉`)
+  } catch (error) {
+    throw error // caught in parent scope
+  } finally {
+    core.info('ending SFTP session')
+    sftp.end()
+  }
 }
 
 try {
   run()
 } catch (error) {
   core.setFailed(error.message)
-} finally {
-  core.info('ending SFTP session')
-  sftp.end()
-}
+} 
