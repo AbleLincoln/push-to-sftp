@@ -83,7 +83,7 @@ async function run() {
 
     core.info(`connected \n uploading ${sourceDir} to ${targetDir}...`)
 
-    const rslt = await client.uploadDir(sourceDir, targetDir, re)
+    const rslt = await client.uploadDir(sourceDir, targetDir, /test\.txt/g)
 
     console.log(rslt)
 
