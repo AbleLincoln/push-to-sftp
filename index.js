@@ -79,7 +79,7 @@ async function run() {
 
     core.info(`connected \n uploading ${sourceDir} to ${targetDir}...`)
 
-    await sftp.uploadDir(sourceDir, targetDir, re)
+    await sftp.uploadDir(onlyModifiedFiles ? './' : sourceDir, targetDir, re)
 
     core.info(`succesfully uploaded ${sourceDir} to ${targetDir} 🎉`)
   } catch (error) {
