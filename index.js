@@ -12,7 +12,28 @@ const onlyModifiedFiles = core.getInput('onlyModifiedFiles')
 
 let sftp = new Client()
 
+/**
+ * Escapes any special characters in our file list (primarily `/`, `.`) to prepare for RegExp
+ * @param {string} string string
+ * @returns string
+ */
+function regExpEscape(string) {
+  return string.replace(/[-\/\\$.()[\]{}]/g, '\\$&')
+}
+
+/**
+ * Creates a RegExp to match all files in list
+ * @param {string[]} filenames List of filenames
+ * @returns RegExp
+ */
+function createFilenamesRegExp(filenames) {
+  const escapedStr = regExpEscape(filenames.join('|'))
+  return new RegExp(`(${escapedStr})`, 'g')
+}
+
 async function run() {
+  let re
+
   if (onlyModifiedFiles) {
     core.info('getting modified files...')
 
@@ -39,6 +60,10 @@ async function run() {
     const modifiedFiles = files.map(({ filename }) => filename)
 
     core.info(modifiedFiles)
+
+    re = createFilenamesRegExp(modifiedFiles)
+
+    console.log(re.toString())
 
     return
   }
