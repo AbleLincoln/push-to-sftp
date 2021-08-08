@@ -15,9 +15,11 @@ let sftp = new Client()
 async function run() {
   if (onlyModifiedFiles) {
     core.info('getting modified files...')
-    const myToken = core.getInput('myToken')
+    const myToken = core.getInput('token')
     const myTolkien = github.context.token
     core.info(`tokens: ${myToken} ${myTolkien}`)
+
+    return
   }
 
   core.info(`connecting to ${username}@${host}:${port}...`)
