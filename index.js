@@ -74,6 +74,8 @@ async function run() {
     basehead,
   })
 
+  console.log(files)
+
   const modifiedFiles = files
     .filter(({ filename }) => filename.startsWith(targetDir))
     .filter(({ status }) => status === 'modified')
