@@ -10,8 +10,8 @@ _(all default to an empty string)_
 | ---------- | --------- | ------------------------------------------------------------------------------- |
 | host       | yes       | SFTP server                                                                     |
 | port       | yes       | SFTP server port                                                                |
-| username   | no       | SFTP username                                                                    |
-| password   | no       | SFTP password                                                                    |
+| username   | no        | SFTP username                                                                   |
+| password   | no        | SFTP password                                                                   |
 | sourceDir  | yes       | Source directory to upload from (will upload all files in this directory)       |
 | targetDir  | yes       | Remote directory to upload to (WARNING: overwrites ALL files in this directory) |
 | privateKey | no        | SSH key to authenticate with                                                    |
