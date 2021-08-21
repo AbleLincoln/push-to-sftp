@@ -24,8 +24,8 @@ with:
     port: 22
     username: root
     password: ${{ secrets.password }}
-    local-dir: ./app/src/
-    server-dir: ./html/
+    sourceDir: ./app/src/
+    targetDir: ./html/
 ```
 
 ## Feature Wishlist
