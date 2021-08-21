@@ -7,6 +7,8 @@ const username = core.getInput('username')
 const password = core.getInput('password')
 const sourceDir = core.getInput('sourceDir')
 const targetDir = core.getInput('targetDir')
+const privateKey = core.getInput('privateKey')
+const passphrase = core.getInput('passphrase')
 
 core.info(`connecting to ${username}@${host}:${port}...`)
 
@@ -17,6 +19,8 @@ sftp
     port,
     username,
     password,
+    privateKey,
+    passphrase,
     readyTimeout: 5000,
     retries: 5,
   })
@@ -25,7 +29,7 @@ sftp
     return sftp.uploadDir(sourceDir, targetDir)
   })
   .then(() => {
-    core.info(`succesfully uploaded ${sourceDir} to ${targetDir} 🎉`)
+    core.info(`successfully uploaded ${sourceDir} to ${targetDir} 🎉`)
   })
   .catch((error) => {
     core.setFailed(error.message)
