@@ -11,6 +11,11 @@ const targetDir = core.getInput('targetDir')
 core.info(`connecting to ${username}@${host}:${port}...`)
 
 let sftp = new Client()
+
+sftp.on('upload', ({ source, destination }) => {
+  core.info(`uploaded ${source} to ${destination}`)
+})
+
 sftp
   .connect({
     host,
