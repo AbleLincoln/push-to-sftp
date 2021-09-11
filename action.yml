@@ -11,12 +11,18 @@ inputs:
     default: '22'
   username:
     description: 'SFTP username'
-    required: true
+    required: false
     default: ''
   password:
     description: 'SFTP password'
-    required: true
+    required: false
     default: ''
+  privateKey:
+    description: "SSH Key"
+    required: false
+  passphrase:
+    description: "Passphrase for encrypted private keys"
+    required: false
   sourceDir:
     description: 'Source directory to upload from (will upload all files in this directory)'
     required: true
