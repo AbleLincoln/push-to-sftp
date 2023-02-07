@@ -6,14 +6,16 @@ This action uploads an entire directory to your remote SFTP server on push.
 
 _(all default to an empty string)_
 
-| Name      | Required? | Description                                                                     |
-| --------- | --------- | ------------------------------------------------------------------------------- |
-| host      | yes       | SFTP server                                                                     |
-| port      | yes       | SFTP server port                                                                |
-| username  | yes       | SFTP username                                                                   |
-| password  | yes       | SFTP password                                                                   |
-| sourceDir | yes       | Source directory to upload from (will upload all files in this directory)       |
-| targetDir | yes       | Remote directory to upload to (WARNING: overwrites ALL files in this directory) |
+| Name       | Required? | Description                                                                     |
+| ---------- | --------- | ------------------------------------------------------------------------------- |
+| host       | yes       | SFTP server                                                                     |
+| port       | yes       | SFTP server port                                                                |
+| username   | no        | SFTP username                                                                   |
+| password   | no        | SFTP password                                                                   |
+| sourceDir  | yes       | Source directory to upload from (will upload all files in this directory)       |
+| targetDir  | yes       | Remote directory to upload to (WARNING: overwrites ALL files in this directory) |
+| privateKey | no        | SSH key to authenticate with                                                    |
+| passphrase | no        | Passphrase for an encrypted private key                                         |
 
 ## Example usage
 
@@ -24,8 +26,8 @@ with:
     port: 22
     username: root
     password: ${{ secrets.password }}
-    local-dir: ./app/src/
-    server-dir: ./html/
+    sourceDir: ./app/src/
+    targetDir: ./html/
 ```
 
 ## Feature Wishlist

@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@actions/core": "^1.4.0",
-    "ssh2-sftp-client": "^7.0.0"
+    "@actions/core": "^1.5.0",
+    "ssh2-sftp-client": "^7.0.3"
   }
 }
