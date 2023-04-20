@@ -18,10 +18,10 @@ inputs:
     required: false
     default: ''
   privateKey:
-    description: "SSH Key"
+    description: 'SSH Key'
     required: false
   passphrase:
-    description: "Passphrase for encrypted private keys"
+    description: 'Passphrase for encrypted private keys'
     required: false
   sourceDir:
     description: 'Source directory to upload from (will upload all files in this directory)'
@@ -31,11 +31,11 @@ inputs:
     description: 'Remote directory to upload to (WARNING: overwrites ALL files in this directory)'
     required: true
     default: ''
-  
+
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'index.js'
 
 branding:
-  icon: 'upload-cloud'  
+  icon: 'upload-cloud'
   color: 'yellow'
